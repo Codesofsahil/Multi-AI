@@ -2,6 +2,24 @@ import { ModelConfig, LocalModelConfig } from '../types';
 
 export const AVAILABLE_MODELS: ModelConfig[] = [
   {
+    id: 'x-ai/grok-code-fast-1',
+    name: 'Grok Code Fast 1',
+    provider: 'xAI',
+    description: 'Grok Code Fast 1 is a speedy and economical reasoning model that excels at agentic coding. With reasoning traces visible in the response, developers can steer Grok Code for high-quality work flows.',
+    maxTokens: 256000,
+    costPer1kTokens: 0.0015,
+    type: 'remote'
+  },
+  {
+    id: 'openai/gpt-oss-120b',
+    name: 'GPT-OSS 120B',
+    provider: 'OpenAI',
+    description: 'gpt-oss-120b is an open-weight, 117B-parameter Mixture-of-Experts (MoE) language model from OpenAI designed for high-reasoning, agentic, and general-purpose production use cases.',
+    maxTokens: 131000,
+    costPer1kTokens: 0.00028,
+    type: 'remote'
+  },
+  {
     id: 'openai/gpt-4o-mini',
     name: 'GPT-4.1 Mini',
     provider: 'OpenAI',
@@ -33,7 +51,7 @@ export const AVAILABLE_MODELS: ModelConfig[] = [
     name: 'LLaMA 2 70B',
     provider: 'Meta',
     description: 'The highly anticipated 400B class of Llama3 is here! Clocking in at 128k context with impressive eval scores, the Meta AI team continues to push the frontier of open-source LLMs.',
-    maxTokens: 32768,
+    maxTokens: 128000,
     costPer1kTokens: 0.0008,
     type: 'remote'
   },
