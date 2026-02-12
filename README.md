@@ -86,12 +86,14 @@ src/
 
 MIT License
 
-## 👨‍💻 Author
+## 👨💻 Author
 
 **Sahil Sharma**
 - GitHub: [@Codesofsahil](https://github.com/Codesofsahil)
 - Email: sahilsharma.works@gmail.com
 
 ---
+
+**⚠️ Note:** This is a personal college project. Not accepting contributions at this time.
 
 Made with ❤️ by Sahil Sharma
