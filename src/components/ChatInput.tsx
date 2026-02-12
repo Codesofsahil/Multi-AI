@@ -47,7 +47,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   const isSendDisabled = !message.trim() || isLoading || disabled;
 
   return (
-    <div className="bg-white border-t border-gray-200 p-4">
+    <div className="bg-black/30 backdrop-blur-sm border-t border-white/10 p-4">
       <div className="flex items-end gap-3">
         <div className="flex-1 relative">
           <textarea
@@ -57,7 +57,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
             disabled={disabled}
-            className="w-full resize-none border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+            className="w-full resize-none bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-purple-300/50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:bg-white/5 disabled:cursor-not-allowed transition-all"
             rows={1}
             style={{ minHeight: '44px', maxHeight: '120px' }}
           />
@@ -66,9 +66,9 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         <button
           onClick={handleSubmit}
           disabled={isSendDisabled}
-          className={`flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${isSendDisabled
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800'
+          className={`flex-shrink-0 w-11 h-11 rounded-xl flex items-center justify-center transition-all transform hover:scale-105 ${isSendDisabled
+              ? 'bg-white/5 text-purple-300/30 cursor-not-allowed border border-white/10'
+              : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 shadow-lg shadow-purple-500/50'
             }`}
         >
           {isLoading ? (
@@ -79,12 +79,12 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         </button>
       </div>
 
-      <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+      <div className="flex items-center justify-between mt-2 text-xs text-purple-300/60">
         <span>
-          Press Enter to send, Shift+Enter for new line
+          ⏎ Enter to send • Shift+⏎ for new line
         </span>
         <span>
-          {message.length} characters
+          {message.length} chars
         </span>
       </div>
     </div>

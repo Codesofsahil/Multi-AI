@@ -13,6 +13,8 @@ export const SettingsPage: React.FC<{ onClose: () => void }> = ({ onClose }) => 
   const [showLocalModelForm, setShowLocalModelForm] = useState(false);
   const [editingModel, setEditingModel] = useState<LocalModelConfig | null>(null);
   const [importError, setImportError] = useState<string>('');
+  const [apiKey, setApiKey] = useState<string>(SettingsService.getSettings().openRouterApiKey);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   const tabs = [
     { id: 'general', label: 'General', icon: Settings },
@@ -86,33 +88,37 @@ export const SettingsPage: React.FC<{ onClose: () => void }> = ({ onClose }) => 
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl h-[90vh] flex flex-col">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+      <div className="bg-[#171717] border border-gray-800 rounded-lg shadow-2xl w-full max-w-4xl h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Settings</h2>
+        <div className="flex items-center gap-3 p-4 border-b border-gray-800">
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
+            className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+            title="Back"
           >
-            <Settings className="w-6 h-6" />
+            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
           </button>
+          <h2 className="text-lg font-semibold text-white">Settings</h2>
         </div>
 
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar */}
-          <div className="w-64 bg-gray-50 border-r border-gray-200">
-            <nav className="p-4 space-y-2">
+          <div className="w-56 bg-[#0f0f0f] border-r border-gray-800">
+            <nav className="p-3 space-y-1">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as SettingsTab)}
-                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${activeTab === tab.id
-                      ? 'bg-primary-100 text-primary-700'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                      }`}
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
+                      activeTab === tab.id
+                        ? 'bg-gray-800 text-white'
+                        : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+                    }`}
                   >
                     <Icon className="w-4 h-4" />
                     <span>{tab.label}</span>
@@ -123,35 +129,35 @@ export const SettingsPage: React.FC<{ onClose: () => void }> = ({ onClose }) => 
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto p-6 bg-[#171717]">
             {activeTab === 'general' && (
               <div className="space-y-6">
-                <h3 className="text-lg font-medium text-gray-900">General Settings</h3>
+                <h3 className="text-base font-semibold text-white">General Settings</h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm text-gray-400 mb-2">
                       Default Max Tokens
                     </label>
                     <input
                       type="number"
                       value={settings.maxTokens}
                       onChange={(e) => handleSaveSettings({ maxTokens: parseInt(e.target.value) })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 bg-[#2f2f2f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-gray-600"
                       min="1"
                       max="32768"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm text-gray-400 mb-2">
                       Default Temperature
                     </label>
                     <input
                       type="number"
                       value={settings.temperature}
                       onChange={(e) => handleSaveSettings({ temperature: parseFloat(e.target.value) })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 bg-[#2f2f2f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-gray-600"
                       min="0"
                       max="2"
                       step="0.1"
@@ -160,14 +166,14 @@ export const SettingsPage: React.FC<{ onClose: () => void }> = ({ onClose }) => 
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm text-gray-400 mb-2">
                     Local Model Timeout (seconds)
                   </label>
                   <input
                     type="number"
                     value={settings.localModelTimeout / 1000}
                     onChange={(e) => handleSaveSettings({ localModelTimeout: parseInt(e.target.value) * 1000 })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 bg-[#2f2f2f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-gray-600"
                     min="1"
                     max="300"
                   />
@@ -179,9 +185,9 @@ export const SettingsPage: React.FC<{ onClose: () => void }> = ({ onClose }) => 
                     id="autoSave"
                     checked={settings.autoSave}
                     onChange={(e) => handleSaveSettings({ autoSave: e.target.checked })}
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    className="h-4 w-4 rounded bg-[#2f2f2f] border-gray-700"
                   />
-                  <label htmlFor="autoSave" className="ml-2 block text-sm text-gray-900">
+                  <label htmlFor="autoSave" className="ml-2 block text-sm text-gray-400">
                     Auto-save chat history
                   </label>
                 </div>
@@ -190,22 +196,36 @@ export const SettingsPage: React.FC<{ onClose: () => void }> = ({ onClose }) => 
 
             {activeTab === 'api' && (
               <div className="space-y-6">
-                <h3 className="text-lg font-medium text-gray-900">API Configuration</h3>
+                <h3 className="text-base font-semibold text-white">API Configuration</h3>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm text-gray-400 mb-2">
                     OpenRouter API Key
                   </label>
                   <input
                     type="password"
-                    value={settings.openRouterApiKey}
-                    onChange={(e) => handleSaveSettings({ openRouterApiKey: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    value={apiKey}
+                    onChange={(e) => {
+                      setApiKey(e.target.value);
+                      setSaveSuccess(false);
+                    }}
+                    className="w-full px-3 py-2 bg-[#2f2f2f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-gray-600"
                     placeholder="sk-or-v1-..."
                   />
-                  <p className="mt-1 text-sm text-gray-500">
-                    Get your API key from <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">OpenRouter</a>
+                  <p className="mt-2 text-sm text-gray-500">
+                    Get your API key from <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="text-white hover:underline">OpenRouter</a>
                   </p>
+                  
+                  <button
+                    onClick={() => {
+                      handleSaveSettings({ openRouterApiKey: apiKey });
+                      setSaveSuccess(true);
+                      setTimeout(() => setSaveSuccess(false), 2000);
+                    }}
+                    className="mt-4 px-4 py-2 bg-white text-black rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                  >
+                    {saveSuccess ? '✓ Saved!' : 'Save API Key'}
+                  </button>
                 </div>
               </div>
             )}
@@ -213,12 +233,12 @@ export const SettingsPage: React.FC<{ onClose: () => void }> = ({ onClose }) => 
             {activeTab === 'local-models' && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium text-gray-900">Local Models</h3>
+                  <h3 className="text-base font-semibold text-white">Local Models</h3>
                   <button
                     onClick={() => setShowLocalModelForm(true)}
-                    className="flex items-center px-3 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700"
+                    className="flex items-center gap-2 px-3 py-2 text-sm bg-white text-black rounded-lg hover:bg-gray-200 transition-colors"
                   >
-                    <Plus className="w-4 h-4 mr-2" />
+                    <Plus className="w-4 h-4" />
                     Add Model
                   </button>
                 </div>
@@ -235,39 +255,39 @@ export const SettingsPage: React.FC<{ onClose: () => void }> = ({ onClose }) => 
                   />
                 )}
 
-                {/* Local Model Test Component */}
                 <LocalModelTest />
 
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {settings.localModels.map((model) => (
-                    <div key={model.id} className="bg-gray-50 rounded-lg p-4">
+                    <div key={model.id} className="bg-[#2f2f2f] border border-gray-700 rounded-lg p-4">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
-                          <div className="flex items-center space-x-2">
-                            <h4 className="text-sm font-medium text-gray-900">{model.name}</h4>
-                            <span className={`px-2 py-1 text-xs rounded-full ${model.isEnabled
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-gray-100 text-gray-800'
-                              }`}>
+                          <div className="flex items-center gap-2 mb-2">
+                            <h4 className="text-sm font-medium text-white">{model.name}</h4>
+                            <span className={`px-2 py-0.5 text-xs rounded ${
+                              model.isEnabled
+                                ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                                : 'bg-gray-700 text-gray-400'
+                            }`}>
                               {model.isEnabled ? 'Enabled' : 'Disabled'}
                             </span>
-                            <span className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">
+                            <span className="px-2 py-0.5 text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded">
                               {model.modelType}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600 mt-1">{model.description}</p>
-                          <p className="text-xs text-gray-500 mt-1">{model.endpoint}</p>
+                          <p className="text-sm text-gray-400 mb-1">{model.description}</p>
+                          <p className="text-xs text-gray-500">{model.endpoint}</p>
                         </div>
-                        <div className="flex space-x-2">
+                        <div className="flex gap-2">
                           <button
                             onClick={() => handleEditLocalModel(model)}
-                            className="p-1 text-gray-400 hover:text-gray-600"
+                            className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded transition-colors"
                           >
                             <Edit className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteLocalModel(model.id)}
-                            className="p-1 text-gray-400 hover:text-red-600"
+                            className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded transition-colors"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -281,16 +301,16 @@ export const SettingsPage: React.FC<{ onClose: () => void }> = ({ onClose }) => 
 
             {activeTab === 'appearance' && (
               <div className="space-y-6">
-                <h3 className="text-lg font-medium text-gray-900">Appearance</h3>
+                <h3 className="text-base font-semibold text-white">Appearance</h3>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm text-gray-400 mb-2">
                     Theme
                   </label>
                   <select
                     value={settings.theme}
                     onChange={(e) => handleSaveSettings({ theme: e.target.value as any })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 bg-[#2f2f2f] border border-gray-700 rounded-lg text-white focus:outline-none focus:border-gray-600"
                   >
                     <option value="light">Light</option>
                     <option value="dark">Dark</option>
@@ -298,21 +318,21 @@ export const SettingsPage: React.FC<{ onClose: () => void }> = ({ onClose }) => 
                   </select>
                 </div>
 
-                <div className="border-t border-gray-200 pt-6">
-                  <h4 className="text-sm font-medium text-gray-900 mb-4">Import/Export Settings</h4>
+                <div className="border-t border-gray-800 pt-6">
+                  <h4 className="text-sm font-medium text-white mb-4">Import/Export Settings</h4>
 
-                  <div className="space-y-4">
-                    <div className="flex space-x-3">
+                  <div className="space-y-3">
+                    <div className="flex gap-3">
                       <button
                         onClick={handleExportSettings}
-                        className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                        className="flex items-center gap-2 px-3 py-2 text-sm bg-[#2f2f2f] border border-gray-700 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
                       >
-                        <Download className="w-4 h-4 mr-2" />
+                        <Download className="w-4 h-4" />
                         Export Settings
                       </button>
 
-                      <label className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer">
-                        <Upload className="w-4 h-4 mr-2" />
+                      <label className="flex items-center gap-2 px-3 py-2 text-sm bg-[#2f2f2f] border border-gray-700 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors cursor-pointer">
+                        <Upload className="w-4 h-4" />
                         Import Settings
                         <input
                           type="file"
@@ -324,14 +344,14 @@ export const SettingsPage: React.FC<{ onClose: () => void }> = ({ onClose }) => 
                     </div>
 
                     {importError && (
-                      <p className="text-sm text-red-600">{importError}</p>
+                      <p className="text-sm text-red-400">{importError}</p>
                     )}
 
                     <button
                       onClick={handleResetSettings}
-                      className="flex items-center px-3 py-2 text-sm font-medium text-red-700 bg-white border border-red-300 rounded-md hover:bg-red-50"
+                      className="flex items-center gap-2 px-3 py-2 text-sm bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors"
                     >
-                      <Trash2 className="w-4 h-4 mr-2" />
+                      <Trash2 className="w-4 h-4" />
                       Reset to Defaults
                     </button>
                   </div>

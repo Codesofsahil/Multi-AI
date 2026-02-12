@@ -2,105 +2,109 @@ import { ModelConfig, LocalModelConfig } from '../types';
 
 export const AVAILABLE_MODELS: ModelConfig[] = [
   {
-    id: 'x-ai/grok-code-fast-1',
-    name: 'Grok Code Fast 1',
-    provider: 'xAI',
-    description: 'Grok Code Fast 1 is a speedy and economical reasoning model that excels at agentic coding. With reasoning traces visible in the response, developers can steer Grok Code for high-quality work flows.',
-    maxTokens: 256000,
-    costPer1kTokens: 0.0015,
+    id: 'gpt-4o-mini',
+    name: 'GPT-4o Mini',
+    provider: 'openai',
+    description: 'OpenAI GPT-4o Mini - Fast and efficient',
+    maxTokens: 4096,
+    temperature: 0.7,
+    costPer1kTokens: 0.15,
     type: 'remote'
   },
   {
-    id: 'openai/gpt-oss-120b',
-    name: 'GPT-OSS 120B',
-    provider: 'OpenAI',
-    description: 'gpt-oss-120b is an open-weight, 117B-parameter Mixture-of-Experts (MoE) language model from OpenAI designed for high-reasoning, agentic, and general-purpose production use cases.',
-    maxTokens: 131000,
-    costPer1kTokens: 0.00028,
-    type: 'remote'
-  },
-  {
-    id: 'openai/gpt-4o-mini',
-    name: 'GPT-4.1 Mini',
-    provider: 'OpenAI',
-    description: 'GPT-4o mini is OpenAI\'s newest model after GPT-4 Omni, supporting both text and image inputs with text outputs.',
-    maxTokens: 128000,
-    costPer1kTokens: 0.0006,
-    type: 'remote'
-  },
-  {
-    id: 'anthropic/claude-3-haiku',
+    id: 'claude-3-haiku-20240307',
     name: 'Claude 3 Haiku',
-    provider: 'Anthropic',
-    description: 'Claude 3 Haiku is Anthropic\'s fastest and most compact model for near-instant responsiveness. Quick and accurate targeted performance.',
-    maxTokens: 200000,
-    costPer1kTokens: 0.00125,
+    provider: 'anthropic',
+    description: 'Anthropic Claude 3 Haiku - Quick responses',
+    maxTokens: 4096,
+    temperature: 0.7,
+    costPer1kTokens: 0.25,
     type: 'remote'
   },
   {
-    id: 'mistralai/codestral-2508',
-    name: 'Mistral Codestral 2508',
-    provider: 'Mistral AI',
-    description: 'Mistral\'s cutting-edge language model for coding released end of July 2025. Codestral specializes in low-latency, high-frequency tasks such as fill-in-the-middle (FIM), code correction and test generation.',
-    maxTokens: 256000,
-    costPer1kTokens: 0.0009,
+    id: 'gemini-1.5-flash',
+    name: 'Gemini 1.5 Flash',
+    provider: 'google',
+    description: 'Google Gemini Flash - Lightning fast',
+    maxTokens: 4096,
+    temperature: 0.7,
+    costPer1kTokens: 0.075,
     type: 'remote'
   },
   {
-    id: 'meta-llama/llama-3.1-405b-instruct',
-    name: 'LLaMA 2 70B',
-    provider: 'Meta',
-    description: 'The highly anticipated 400B class of Llama3 is here! Clocking in at 128k context with impressive eval scores, the Meta AI team continues to push the frontier of open-source LLMs.',
-    maxTokens: 128000,
-    costPer1kTokens: 0.0008,
-    type: 'remote'
-  },
-  {
-    id: 'google/gemini-2.0-flash-001',
-    name: 'Gemini 2.0 Flash',
-    provider: 'Google',
-    description: 'Gemini Flash 2.0 offers a significantly faster time to first token (TTFT) compared to Gemini Flash 1.5, while maintaining quality on par with larger models like Gemini Pro 1.5',
-    maxTokens: 1048576,
-    costPer1kTokens: 0.0004,
+    id: 'deepseek-chat',
+    name: 'DeepSeek Chat',
+    provider: 'deepseek',
+    description: 'DeepSeek Chat - Advanced reasoning',
+    maxTokens: 4096,
+    temperature: 0.7,
+    costPer1kTokens: 0.14,
     type: 'remote'
   }
 ];
 
 export const DEFAULT_LOCAL_MODELS: LocalModelConfig[] = [
   {
-    id: 'local-ollama-llama2',
-    name: 'Local LLaMA 2',
-    description: 'LLaMA 2 model running locally via Ollama',
-    endpoint: 'http://localhost:11434/api/generate',
-    maxTokens: 4096,
+    id: 'llama3.2:latest',
+    name: 'Llama 3.2',
+    provider: 'Meta',
+    description: 'Meta Llama 3.2 - Fast and efficient',
+    endpoint: 'http://localhost:11434/api/chat',
+    maxTokens: 512,
     temperature: 0.7,
-    isEnabled: false,
+    isEnabled: true,
     modelType: 'ollama'
   },
   {
-    id: 'local-ollama-mistral',
-    name: 'Local Mistral',
-    description: 'Mistral model running locally via Ollama',
-    endpoint: 'http://localhost:11434/api/generate',
-    maxTokens: 4096,
+    id: 'mistral:latest',
+    name: 'Mistral',
+    provider: 'Mistral AI',
+    description: 'Mistral 7B - Powerful open-source model',
+    endpoint: 'http://localhost:11434/api/chat',
+    maxTokens: 512,
     temperature: 0.7,
-    isEnabled: false,
+    isEnabled: true,
     modelType: 'ollama'
   },
   {
-    id: 'local-openai-compatible',
-    name: 'Local OpenAI Compatible',
-    description: 'Any OpenAI-compatible API endpoint',
-    endpoint: 'http://localhost:8000/v1/chat/completions',
-    maxTokens: 4096,
+    id: 'phi3:latest',
+    name: 'Phi-3',
+    provider: 'Microsoft',
+    description: 'Microsoft Phi-3 - Small but capable',
+    endpoint: 'http://localhost:11434/api/chat',
+    maxTokens: 512,
     temperature: 0.7,
-    isEnabled: false,
-    modelType: 'openai-compatible'
+    isEnabled: true,
+    modelType: 'ollama'
+  },
+  {
+    id: 'deepseek-coder:1.3b',
+    name: 'DeepSeek Coder',
+    provider: 'DeepSeek',
+    description: 'DeepSeek Coder - Programming specialist',
+    endpoint: 'http://localhost:11434/api/chat',
+    maxTokens: 512,
+    temperature: 0.7,
+    isEnabled: true,
+    modelType: 'ollama'
+  },
+  {
+    id: 'qwen2.5:1.5b',
+    name: 'Qwen 2.5',
+    provider: 'Alibaba',
+    description: 'Alibaba Qwen 2.5 - Multilingual model',
+    endpoint: 'http://localhost:11434/api/chat',
+    maxTokens: 512,
+    temperature: 0.7,
+    isEnabled: true,
+    modelType: 'ollama'
   }
 ];
 
-export const getModelById = (id: string): ModelConfig | undefined => {
-  return AVAILABLE_MODELS.find(model => model.id === id);
+export const getModelById = (id: string): ModelConfig | LocalModelConfig | undefined => {
+  const remoteModel = AVAILABLE_MODELS.find(model => model.id === id);
+  if (remoteModel) return remoteModel;
+  return DEFAULT_LOCAL_MODELS.find(model => model.id === id);
 };
 
 export const getLocalModelById = (id: string): LocalModelConfig | undefined => {

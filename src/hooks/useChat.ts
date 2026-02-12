@@ -1,12 +1,24 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { ChatMessage } from '../types';
 import { ApiService } from '../services/api';
 import { SettingsService } from '../services/settings';
+import { ChatHistoryService } from '../services/chatHistory';
 
 export const useChat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [selectedModels, setSelectedModels] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+
+  // Save chat when messages change
+  useEffect(() => {
+    if (messages.length > 0 && !isLoading) {
+      const chatId = ChatHistoryService.saveChat(messages);
+      if (chatId && !currentChatId) {
+        setCurrentChatId(chatId);
+      }
+    }
+  }, [messages, isLoading]);
 
   const addMessage = useCallback((message: ChatMessage) => {
     setMessages(prev => [...prev, message]);
@@ -143,6 +155,15 @@ export const useChat = () => {
 
   const clearMessages = useCallback(() => {
     setMessages([]);
+    setCurrentChatId(null);
+  }, []);
+
+  const loadChat = useCallback((chatId: string) => {
+    const chat = ChatHistoryService.getChat(chatId);
+    if (chat) {
+      setMessages(chat.messages);
+      setCurrentChatId(chatId);
+    }
   }, []);
 
   const setModels = useCallback((modelIds: string[]) => {
@@ -153,8 +174,10 @@ export const useChat = () => {
     messages,
     selectedModels,
     isLoading,
+    currentChatId,
     sendMessage,
     clearMessages,
+    loadChat,
     setModels,
   };
 };

@@ -31,6 +31,7 @@ export interface LocalModelConfig {
   temperature: number;
   isEnabled: boolean;
   modelType: 'ollama' | 'openai-compatible' | 'custom';
+  provider?: string;
 }
 
 export interface AppSettings {

@@ -141,21 +141,16 @@ export class ApiService {
       try {
         if (model.modelType === 'ollama') {
 
-          let endpointToUse = model.endpoint;
-          if (!endpointToUse.includes('/api/')) {
-            endpointToUse = new URL('/api/chat', endpointToUse).href;
-          }
-          const isChatEndpoint = endpointToUse.includes('/api/chat');
+          // Use /api/chat for better compatibility
+          const baseUrl = model.endpoint.replace('/api/generate', '').replace('/api/chat', '');
+          const endpointToUse = `${baseUrl}/api/chat`;
 
           const response = await fetch(endpointToUse, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              model: model.name,
-              ...(isChatEndpoint
-                ? { messages: [{ role: 'user', content: message }] }
-                : { prompt: message }
-              ),
+              model: model.id,
+              messages: [{ role: 'user', content: message }],
               stream: false,
               options: {
                 temperature: model.temperature,
@@ -170,7 +165,7 @@ export class ApiService {
             throw new Error(`HTTP ${response.status}: ${data.error || 'Unknown Ollama error'}`);
           }
 
-          const content = isChatEndpoint ? data.message?.content : data.response;
+          const content = data.message?.content || '';
 
           return {
             model: model.id,

@@ -11,7 +11,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   temperature: 0.7,
   theme: 'light',
   autoSave: true,
-  localModelTimeout: 30000,
+  localModelTimeout: 120000,
   remoteModelTimeout: 30000,
 };
 
